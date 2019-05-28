@@ -1,8 +1,9 @@
+// Global Variables
 var lettersGuessed = "";
 var guessesRemaining = 13;
 var phobias = [
   { phobia: "achluophobia", fear: "darkness" },
-  { phobia: "acrophobia", fear: "heights"},
+  { phobia: "acrophobia", fear: "heights" },
   { phobia: "aerophobia", fear: "flying" },
   { phobia: "algophobia", fear: "pain" },
   { phobia: "alektorophobia", fear: "chickens" },
@@ -97,14 +98,16 @@ var phobias = [
   { phobia: "verminophobia", fear: "gems" },
   { phobia: "wiccaphobia", fear: "witches and witchcraft" },
   { phobia: "xenophobia", fear: "strangers or foreigners" },
-  { phobia: "zoophobia", fear: "animals" },
+  { phobia: "zoophobia", fear: "animals" }
 ];
 var phobia = "";
 var fear = "";
+var gamesWon = 0;
+var gamesLost = 0;
 
 // Determine what word the user is guessing
 function mysteryWord() {
-  var temp = Math.floor(Math.random() * 97);
+  var temp = Math.floor(Math.random() * phobias.length);
   console.log(phobias[temp]);
   phobia = phobias[temp].phobia;
   fear = phobias[temp].fear;
@@ -118,14 +121,16 @@ document.onkeypress = function(e) {
   if (isLetter(e.keyCode)) {
     var guess = e.key.toLowerCase();
     if (!letterGuessed(guess)) {
-      document.getElementById("LettersGuessed").innerText = "Letters Guessed: " + e.key;
+      document.getElementById("LettersGuessed").innerText =
+        "Letters Guessed: " + lettersGuessed;
       if (correct(guess)) {
         displayMysteryWord();
-        if (document.getElementById("MysteryWord").innerText === phobia) gameover(true);
-      }
-      else {
+        if (document.getElementById("MysteryWord").innerText === phobia)
+          gameover(true);
+      } else {
         guessesRemaining--;
-        document.getElementById("GuessesRemaining").innerText = "Guesses Remaining: " + guessesRemaining;
+        document.getElementById("GuessesRemaining").innerText =
+          "Guesses Remaining: " + guessesRemaining;
         if (guessesRemaining === 0) gameover(false);
       }
     } else console.log("letter previously guessed");
@@ -144,14 +149,14 @@ function letterGuessed(guess) {
   if (lettersGuessed.includes(guess)) return true;
   else {
     lettersGuessed += guess;
-    return false;  
+    return false;
   }
 }
 
 function correct(guess) {
   if (phobia.substring(0, phobia.length - 6).includes(guess)) return true;
   else {
-    console.log(phobia.substring(0, phobia.length - 6) + " " + guess)
+    console.log(phobia.substring(0, phobia.length - 6) + " " + guess);
     return false;
   }
 }
@@ -160,17 +165,31 @@ function displayMysteryWord() {
   var s = "";
   for (var i = 0; i < phobia.length - 6; i++) {
     if (lettersGuessed.includes(phobia[i])) s += phobia[i];
-    else s += " - "
+    else s += " - ";
   }
-  s += "phobia"
+  s += "phobia";
   document.getElementById("MysteryWord").innerText = s;
 }
 
 function gameover(won) {
   if (won) {
     alert("Congadulations! You win!");
-  }
-  else {
+    gamesWon++;
+  } else {
     alert("Better luck next time!");
+    gamesLost++;
   }
+  for (var i = 0; i < phobias.length; i++) {
+    if (phobias[i].phobia === phobia) phobias.splice(i, 1);
+  }
+  initialize();
+}
+
+function initialize() {
+  lettersGuessed = "";
+  guessesRemaining = 13;
+  document.getElementById("LettersGuessed").innerText = "Letters Guessed:";
+  document.getElementById("GuessesRemaining").innerText =
+    "Guesses Remaining: 13";
+  mysteryWord();
 }
