@@ -160,7 +160,7 @@ function displayMysteryWord() {
   var s = "";
   for (var i = 0; i < phobia.length - 6; i++) {
     if (lettersGuessed.includes(phobia[i])) s += phobia[i];
-    else s += "-"
+    else s += " - "
   }
   s += "phobia"
   document.getElementById("MysteryWord").innerText = s;
